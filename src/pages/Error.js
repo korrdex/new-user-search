@@ -5,7 +5,7 @@ const Error = () => {
   return (
     <Wrapper>
       <div className="">
-        <h1>404</h1>
+        <h1>404 code !</h1>
         <h3>sorry, this page can't be found, please try again</h3>
         <Link to="/" className="btn">
           back home
