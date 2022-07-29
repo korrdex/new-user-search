@@ -24,11 +24,20 @@ const GithubProvider = ({ children }) => {
     if (resp) {
       setGuser(resp.data);
       const { followers_url, repos_url } = resp.data;
-      axios(`${followers_url}?per_page=100`).then((resp) =>
-        setFollowers(resp.data)
-      );
 
-      axios(`${repos_url}?per_page=100`).then((resp) => setRepos(resp.data));
+      await Promise.allSettled([
+        axios(`${followers_url}?per_page=100`),
+        axios(`${repos_url}?per_page=100`),
+      ]).then((res) => {
+        const [repos, herd] = res;
+        const status = "fulfilled";
+        if (repos.status === status) {
+          setRepos(repos.value.data);
+        }
+        if (herd.status === status) {
+          setFollowers(herd.value.data);
+        }
+      });
     } else {
       toggleError(true, "username can't be found, please try again");
     }
